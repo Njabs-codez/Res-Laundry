@@ -1,20 +1,26 @@
 package com.college.backend;
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.Objects;
 
+@Entity
 public class Machine {
+
+    @Id
     private Integer number;
-    private MachineType type;
+    private String type; // Washer or Dryer
     private Integer usedBy;
 
-    public Machine(Integer number, Integer usedBy, MachineType type) {
+    public Machine(Integer number, Integer usedBy, String type) {
         this.number = number;
         this.usedBy = usedBy;
         this.type = type;
     }
 
-    public MachineType getType() {
+    public String getType() {
         return type;
     }
 

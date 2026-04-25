@@ -1,15 +1,22 @@
 package com.college.backend;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Resident {
+    @Id
     private Integer studentNumber;
     private String phoneNumber;
     private String firstName;
     private String lastName;
     private String roomNumber;
     private String password;
+    @OneToMany
     private List<Machine> machines;
 
     public Resident(){}
