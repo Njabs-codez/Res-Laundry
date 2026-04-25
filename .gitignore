@@ -4,3 +4,4 @@
 *.ipr
 out/
 backend/mvnw*
+.env
