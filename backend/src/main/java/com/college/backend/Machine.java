@@ -1,22 +1,22 @@
 package com.college.backend;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Machine {
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer number;
     private String type; // Washer or Dryer
-    private Integer usedBy;
+    @OneToMany(mappedBy = "machine", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MachineUsage> usedBy;
 
-    public Machine(Integer number, Integer usedBy, String type) {
+    public Machine(Integer number, String type) {
         this.number = number;
-        this.usedBy = usedBy;
         this.type = type;
     }
 

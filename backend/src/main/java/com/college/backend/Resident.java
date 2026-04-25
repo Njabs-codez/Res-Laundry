@@ -1,5 +1,6 @@
 package com.college.backend;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -16,8 +17,8 @@ public class Resident {
     private String lastName;
     private String roomNumber;
     private String password;
-    @OneToMany
-    private List<Machine> machines;
+    @OneToMany(mappedBy = "resident", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MachineUsage> machines;
 
     public Resident(){}
 
@@ -38,7 +39,7 @@ public class Resident {
         this.studentNumber = studentNumber;
     }
 
-    public List<Machine> getMachines() {
+    public List<MachineUsage> getMachines() {
         return machines;
     }
 
