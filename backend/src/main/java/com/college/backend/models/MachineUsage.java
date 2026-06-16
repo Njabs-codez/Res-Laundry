@@ -2,7 +2,6 @@ package com.college.backend.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,7 +16,10 @@ public class MachineUsage {
     private Resident resident;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "number")
+    @JoinColumns({
+        @JoinColumn(name = "machineNumber", referencedColumnName = "number"),
+        @JoinColumn(name = "machineType", referencedColumnName = "number")
+    })
     private Machine machine;
 
     private LocalDateTime timeIn;
