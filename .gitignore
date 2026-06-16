@@ -5,3 +5,4 @@
 out/
 backend/mvnw*
 .env
+.vscode
