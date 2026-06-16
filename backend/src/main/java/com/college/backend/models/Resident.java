@@ -2,10 +2,12 @@ package com.college.backend.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Entity
 @Data
+@AllArgsConstructor
 public class Resident {
     @Id
     private String studentNumber;
@@ -14,13 +16,5 @@ public class Resident {
     private String lastName;
     private String roomNumber;
     private String password;
-   
-    public Resident(String studentNumber, String firstName, String lastName, String phoneNumber, String roomNumber, String password ) {
-        this.roomNumber = roomNumber;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.studentNumber = studentNumber;
-        this.password = password;
-    }
+    private String refreshToken;
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.college.backend.dtos.AuthResponseDTO;
 import com.college.backend.dtos.LoginDTO;
 import com.college.backend.dtos.RegisterDTO;
 import com.college.backend.services.LaundryService;
@@ -32,16 +33,16 @@ public class LaundryController {
         );
     }
     
-
     @PostMapping("/register")
     public ResponseEntity<?> registerResident(RegisterDTO residentDetails){
-        
-        return new ResponseEntity<>(HttpStatus.OK);
+        AuthResponseDTO response = service.register(residentDetails);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateResident(LoginDTO loginDetails){
-        return new ResponseEntity<>(HttpStatus.OK);
+        AuthResponseDTO response = service.authenticate(loginDetails);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/available-machines")

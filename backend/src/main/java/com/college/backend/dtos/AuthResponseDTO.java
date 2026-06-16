@@ -1,3 +1,7 @@
 package com.college.backend.dtos;
 
-public record AuthResponseDTO() {}
+public record AuthResponseDTO(
+    String accessToken,
+    String refreshToken,
+    String message
+){}

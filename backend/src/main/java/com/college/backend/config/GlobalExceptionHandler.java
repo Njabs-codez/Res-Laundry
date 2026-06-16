@@ -3,6 +3,7 @@ package com.college.backend.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -37,22 +38,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(res, HttpStatus.BAD_REQUEST);
     }
 
-    // @ExceptionHandler(DuplicateKeyException.class)
-    // public ResponseEntity<Map<String, String>> handleDuplicateKeyException(DuplicateKeyException ex) {
-    //     Map<String, String> error = new HashMap<>();
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateKeyException(DuplicateKeyException ex) {
+        Map<String, String> error = new HashMap<>();
         
-    //     String message = ex.getMessage();
+        error.put("error", ex.getMessage());
         
-    //     if (message != null && message.contains("username")) {
-    //         error.put("error", "Username is already taken");
-    //     } else if (message != null && message.contains("emailAddress")) {
-    //         error.put("error", "Email address is already in use");
-    //     } else {
-    //         error.put("error", "A duplicate entry already exists");
-    //     }
-        
-    //     return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-    // }
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneric(Exception ex) {

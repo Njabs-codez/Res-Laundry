@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public record RegisterDTO(
     @NotNull(message = "Student number is a required field.")
     @NotBlank(message = "Student number cannot be blank.")
-    @Size(min = 8, max = 8, message = "Student number must 8 digits long.")
+    @Size(min = 8, max = 8, message = "Student number must be 8 digits long.")
     String studentNumber,
     @NotNull(message = "First name is a required field.")
     @NotBlank(message = "First name cannot be blank.")
@@ -27,5 +27,10 @@ public record RegisterDTO(
     String password,
     @NotNull(message = "Room number is a required field.")
     @NotBlank(message = "Room number cannot be blank.")
-    String roomNumber
+    @Size(min = 5, max = 6, message = "Room number must be 5-6 digits long.")
+    String roomNumber,
+    @NotNull(message = "Phone number is a required field.")
+    @NotBlank(message = "Phone number cannot be blank.")
+    @Size(min = 10, max = 10, message = "Phone number must be 10 digits long.")
+    String phoneNumber
 ) {}

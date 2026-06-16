@@ -28,7 +28,7 @@ public class JWTService {
         this.residentRepo = residentRepo;
     }
 
-    public String generateToken(Integer studentNumber, boolean refresh) {
+    public String generateToken(String studentNumber, boolean refresh) {
         Map<String, Object> claims = new HashMap<>();
         int ttl = (!refresh) 
         ? 1 * 60 * 60 * 1000 
@@ -36,7 +36,7 @@ public class JWTService {
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(String.valueOf(studentNumber))
+                .subject(studentNumber)
                 .id(UUID.randomUUID().toString())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + ttl))
