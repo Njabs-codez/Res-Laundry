@@ -1,14 +1,16 @@
-package com.college.backend;
+package com.college.backend.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Data
 public class MachineUsage {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studentNumber")
@@ -19,6 +21,5 @@ public class MachineUsage {
     private Machine machine;
 
     private LocalDateTime timeIn;
-
     private Integer cycleDuration;
 }

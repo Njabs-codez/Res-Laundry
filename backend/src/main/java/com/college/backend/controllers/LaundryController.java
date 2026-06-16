@@ -1,8 +1,10 @@
-package com.college.backend;
+package com.college.backend.controllers;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.college.backend.models.Machine;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.college.backend;
+package com.college.backend.models;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
