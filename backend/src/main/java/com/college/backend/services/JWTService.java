@@ -28,9 +28,11 @@ public class JWTService {
         this.residentRepo = residentRepo;
     }
 
-    public String generateToken(Integer studentNumber) {
+    public String generateToken(Integer studentNumber, boolean refresh) {
         Map<String, Object> claims = new HashMap<>();
-        int ttl = 1 * 60 * 60 * 1000;
+        int ttl = (!refresh) 
+        ? 1 * 60 * 60 * 1000 
+        : 24 * 60 * 60 * 1000;
         return Jwts.builder()
                 .claims()
                 .add(claims)
@@ -44,9 +46,9 @@ public class JWTService {
                 
     }
 
-    public Integer extractStudentNumber(String token) {
+    public String extractStudentNumber(String token) {
         String studentNumber = extractClaim(token, Claims::getSubject);
-        return Integer.valueOf(studentNumber);
+        return studentNumber;
     }
 
     private SecretKey getKey() {
@@ -67,15 +69,15 @@ public class JWTService {
     }
 
     public boolean validateToken(String token, UserDetails userDeets) {
-        Integer studentNumber = extractStudentNumber(token);
+        String studentNumber = extractStudentNumber(token);
         Resident resident = residentRepo.findById(studentNumber).orElse(null);
         
         return !isTokenExpired(token) && 
         resident != null && 
-        userDeets.getUsername().equals(String.valueOf(resident.getStudentNumber()));
+        userDeets.getUsername().equals(resident.getStudentNumber());
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         Date expiry = extractClaim(token, Claims::getExpiration);
         return expiry.before(new Date());
     }

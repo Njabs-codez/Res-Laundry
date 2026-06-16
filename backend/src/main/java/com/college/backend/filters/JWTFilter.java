@@ -41,7 +41,7 @@ public class JWTFilter extends OncePerRequestFilter{
             throws ServletException, IOException {
         
         String authHeader = request.getHeader("Authorization");
-        Integer studentNumber = null;
+        String studentNumber = null;
         String token = null;
 
         try{
@@ -51,7 +51,7 @@ public class JWTFilter extends OncePerRequestFilter{
             }
             
             if(studentNumber != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDeets = context.getBean(MyUserDetailsService.class).loadUserByStudentNumber(studentNumber);
+                UserDetails userDeets = context.getBean(MyUserDetailsService.class).loadUserByUsername(studentNumber);
                 
                 if(service.validateToken(token, userDeets)){
                     UsernamePasswordAuthenticationToken authToken = 

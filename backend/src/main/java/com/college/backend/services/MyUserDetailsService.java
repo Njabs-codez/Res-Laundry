@@ -20,14 +20,10 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new UserDetailImpl(null);
-    }
-
-    public UserDetails loadUserByStudentNumber(Integer userId) throws Exception {
-        Resident user = residentRepo.findById(userId).orElse(null);
+        Resident user = residentRepo.findById(username).orElse(null);
 
         if(user == null) 
-            throw new Exception(userId + "does not exist");
+            throw new UsernameNotFoundException(username + "does not exist");
 
         return new UserDetailImpl(user);
     }

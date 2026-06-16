@@ -1,5 +1,7 @@
 package com.college.backend.controllers;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import com.college.backend.dtos.LoginDTO;
 import com.college.backend.dtos.RegisterDTO;
 import com.college.backend.services.LaundryService;
 
+
 @RestController
 @RequestMapping("/api")
 public class LaundryController {
@@ -20,6 +23,15 @@ public class LaundryController {
     LaundryController(LaundryService service) {
         this.service = service;
     }
+
+    @GetMapping("/hello")
+    public ResponseEntity<?> healthCheck() {
+        return new ResponseEntity<>(
+            Map.of("message", "Hello there, I am healthy."), 
+            HttpStatus.OK
+        );
+    }
+    
 
     @PostMapping("/register")
     public ResponseEntity<?> registerResident(RegisterDTO residentDetails){

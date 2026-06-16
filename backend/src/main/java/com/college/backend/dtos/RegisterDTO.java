@@ -8,7 +8,8 @@ import jakarta.validation.constraints.Size;
 public record RegisterDTO(
     @NotNull(message = "Student number is a required field.")
     @NotBlank(message = "Student number cannot be blank.")
-    Integer studentNumber,
+    @Size(min = 8, max = 8, message = "Student number must 8 digits long.")
+    String studentNumber,
     @NotNull(message = "First name is a required field.")
     @NotBlank(message = "First name cannot be blank.")
     @Size(min = 3, message = "First name must be at least 3 characters long.")
@@ -21,7 +22,7 @@ public record RegisterDTO(
     @NotBlank(message = "Password cannot be blank.")
     @Pattern(
         regexp = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$",
-        message = "Password must be at least 8 characters and contain at least one uppercase letter, number, and symbol"
+        message = "Password must be at least 8 characters and contain at least one uppercase letter, number, and symbol."
     )
     String password,
     @NotNull(message = "Room number is a required field.")
