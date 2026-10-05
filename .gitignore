@@ -2,7 +2,5 @@
 *.iws
 *.iml
 *.ipr
-out/
-backend/mvnw*
 .env
 .vscode
