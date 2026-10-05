@@ -7,6 +7,7 @@ const app = new Hono()
 app.route("/api/auth", authRoutes)
 
 app.get('/api/', (c) => {
+
   return c.text('Hello Hono!')
 })
 
