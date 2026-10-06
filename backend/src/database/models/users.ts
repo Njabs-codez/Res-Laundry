@@ -1,4 +1,5 @@
-import { pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
+import { check, pgEnum, pgTable, varchar } from "drizzle-orm/pg-core";
 
 export const userRole = pgEnum('role', [
     'resident',
@@ -7,7 +8,7 @@ export const userRole = pgEnum('role', [
     'dev'
 ])
 
-export const users = pgTable('users', {
+export const usersTable = pgTable('users', {
     studentNumber: varchar('student_number', { length: 9 }).primaryKey(),
     firstName: varchar('first_name', { length: 255 }).notNull().default("College"),
     lastName: varchar('last_name', { length: 255 }).notNull().default("Man"),
@@ -17,4 +18,6 @@ export const users = pgTable('users', {
     cellNumber: varchar('cellphone_number', { length: 10 }).notNull().default("not assigned"),
     refreshToken: varchar('refresh_token', { length: 255 }),
     resetPasswordToken: varchar('reset_password_token', { length: 255 }),
-})
+}, (table) => [
+    check('student_number_format', sql`${table.studentNumber} ~ '^u[0-9]{8}$'`)
+])

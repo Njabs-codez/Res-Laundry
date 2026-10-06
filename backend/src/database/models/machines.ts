@@ -10,7 +10,7 @@ export const machineStatusEnum = pgEnum("machine_status", [
     "unhealthy"
 ])
 
-export const machine = pgTable("machines", {
+export const machinesTable = pgTable("machines", {
     number: integer("number").notNull(),
     type: machineTypeEnum().notNull().default("washing machine"),
     status: machineStatusEnum().notNull().default("healthy"),

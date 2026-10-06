@@ -1,8 +1,9 @@
-import { config } from 'dotenv'
 import { drizzle } from 'drizzle-orm/node-postgres'
+import { machineUsageRelation } from './relations.ts'
 
-config({ path: '../../../.env' })
-
-const db = drizzle(process.env.DATABASE_URL as string)
+const db = drizzle({ 
+    connection: process.env.DATABASE_URL as string,
+    relations: machineUsageRelation 
+})
 
 export default db
