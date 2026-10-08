@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "7d868b91-acef-4ab8-994f-25624b6cce87",
+  "id": "22972f73-18dd-478c-8147-73bb5de0dcd7",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -25,8 +25,25 @@
       "schema": "public"
     },
     {
+      "values": [
+        "resident",
+        "coordinator",
+        "EC",
+        "dev"
+      ],
+      "name": "role",
+      "entityType": "enums",
+      "schema": "public"
+    },
+    {
       "isRlsEnabled": false,
       "name": "machines",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "machine_usages",
       "entityType": "tables",
       "schema": "public"
     },
@@ -76,6 +93,97 @@
       "table": "machines"
     },
     {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
+      "type": "varchar",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "student_number",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "machine_number",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
+      "type": "machine_type",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "machine_type",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "time_in",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
+      "type": "timestamp",
+      "typeSchema": null,
+      "notNull": false,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "time_out",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
+      "type": "integer",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "duration",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
       "type": "varchar(9)",
       "typeSchema": null,
       "notNull": true,
@@ -110,6 +218,19 @@
       "generated": null,
       "identity": null,
       "name": "last_name",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "users"
+    },
+    {
+      "type": "role",
+      "typeSchema": "public",
+      "notNull": true,
+      "dimensions": 0,
+      "default": "'resident'",
+      "generated": null,
+      "identity": null,
+      "name": "role",
       "entityType": "columns",
       "schema": "public",
       "table": "users"
@@ -180,6 +301,42 @@
       "table": "users"
     },
     {
+      "nameExplicit": false,
+      "columns": [
+        "machine_number",
+        "machine_type"
+      ],
+      "schemaTo": "public",
+      "tableTo": "machines",
+      "columnsTo": [
+        "number",
+        "type"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "RESTRICT",
+      "name": "machine_usages_HliJ8LVfXJbh_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "student_number"
+      ],
+      "schemaTo": "public",
+      "tableTo": "users",
+      "columnsTo": [
+        "student_number"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "name": "machine_usages_student_number_users_student_number_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "machine_usages"
+    },
+    {
       "columns": [
         "number",
         "type"
@@ -189,6 +346,16 @@
       "entityType": "pks",
       "schema": "public",
       "table": "machines"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "machine_usages_pkey",
+      "schema": "public",
+      "table": "machine_usages",
+      "entityType": "pks"
     },
     {
       "columns": [

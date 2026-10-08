@@ -1,28 +1,42 @@
 import { Hono } from "hono"
 import db from '../database/db.ts'
+import { LoginSchema } from "../dtos/auth/LoginSchema.ts"
+import { RegisterSchema } from "../dtos/auth/RegisterSchema.ts"
+import { zValidator } from "@hono/zod-validator"
 import { usersTable } from "../database/models/users.ts"
-import { machineUsagesTable } from "../database/models/machineUsage.ts"
 import { eq } from "drizzle-orm"
+import { StudentNumber } from "../dtos/auth/StudentNumber.ts"
 
-const app = new Hono()
 
-app.get("/", async (ctx) => {
-    const users = await db.select({ 
-        firsName: usersTable.firstName,
-        lastName: usersTable.lastName,
-        roomNumber: usersTable.roomNumber,
-        machineNumber: machineUsagesTable.machineNumber,
-        machineType: machineUsagesTable.machineType,
-    }).
-    from(usersTable)
-    .leftJoin(
-        machineUsagesTable, 
-        eq(usersTable.studentNumber, machineUsagesTable.studentNumber)
-    )
+const app = new Hono({strict: false})
+
+app.post("/", zValidator('json', StudentNumber), async (ctx) => {
+    const data = ctx.req.valid("json")
+    
+    const [user] = await db.select()
+                        .from(usersTable)
+                        .where(eq(usersTable.studentNumber, data.studentNumber))
+    if(!user){
+        return ctx.json({
+            message: `Student number '${data.studentNumber}' might not be a College Man.`
+        }, 404)
+    }
 
     return ctx.json({
-        users
+        studentNumber: user.studentNumber
     })
+})
+
+app.post("/register", zValidator("json", RegisterSchema), async (ctx) => {
+
+})
+
+app.post("/login", zValidator("json", LoginSchema), async (ctx) => {
+
+})
+
+app.post("/refresh", async (ctx) => {
+
 })
 
 
