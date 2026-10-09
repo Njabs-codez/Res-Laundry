@@ -9,6 +9,7 @@ import { RegisterSchema } from "../dtos/auth/RegisterSchema.ts"
 import { usersTable } from "../database/models/users.ts"
 import { StudentNumber } from "../dtos/auth/StudentNumber.ts"
 import { VerificationToken } from "../dtos/auth/VerificationToken.ts"
+import { setCookie } from "hono/cookie"
 
 const app = new Hono({strict: false})
 
@@ -46,7 +47,7 @@ app.post("/", zValidator('json', StudentNumber), async (ctx) => {
     const email = `${user.studentNumber}@tuks.co.za`
     const verificationToken = randomBytes(64).toString("hex")
     
-    // swap this out for a call to send an email
+    // TODO: swap this out for a call to send an email
     console.log("email: " + email, "\nverification token: " + verificationToken)
 
 
@@ -80,6 +81,12 @@ app.post("/verification", zValidator("json", VerificationToken), async (ctx) => 
 
 app.post("/register", zValidator("json", RegisterSchema), async (ctx) => {
 
+    // TODO: swap random text bytes field with a "better" string generation step
+    setCookie(ctx, "refreshToken", randomBytes(32).toString("hex"), {
+        sameSite: "strict",
+        httpOnly: true,
+        secure: true
+    })
 })
 
 app.post("/login", zValidator("json", LoginSchema), async (ctx) => {
