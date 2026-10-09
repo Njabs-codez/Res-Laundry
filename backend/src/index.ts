@@ -1,9 +1,11 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
+import { sanitizer } from 'hono-sanitizer'
 import authRoutes from './routes/auth.ts'
 
 const app = new Hono()
 
+app.use("*", sanitizer())
 app.route("/api/auth", authRoutes)
 
 app.get('/api/', (c) => {

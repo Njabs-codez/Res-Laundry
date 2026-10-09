@@ -13,6 +13,8 @@
     "dotenv": "^18.0.5",
     "drizzle-orm": "^1.0.0-rc.4",
     "hono": "^4.13.13",
+    "hono-sanitizer": "^0.0.2-beta",
+    "isomorphic-dompurify": "^4.5.0",
     "pg": "^8.23.1",
     "ws": "^8.22.0",
     "zod": "^4.6.5"
