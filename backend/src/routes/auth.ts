@@ -5,7 +5,6 @@ import { eq, like } from "drizzle-orm"
 import { getCookie, setCookie } from "hono/cookie"
 import { genSaltSync, hashSync, compareSync } from "bcrypt-ts"
 import { sign } from "hono/jwt"
-import { streamSSE } from "hono/streaming"
 import DOMPurify from "isomorphic-dompurify"
 
 import db from "../database/db.ts"
@@ -16,13 +15,14 @@ import { RegisterSchema } from "../dtos/auth/RegisterSchema.ts"
 import { usersTable } from "../database/models/users.ts"
 import { StudentNumber } from "../dtos/auth/StudentNumber.ts"
 import { VerificationSchema } from "../dtos/auth/VerificationSchema.ts"
+import sendEmail from "../emails/sendEmail.ts"
 
 
 const app = new Hono()
 
 
-app.get("/", async (ctx) => {
-    const query = ctx.req.query("search")?.trim()
+app.get("/", async (c) => {
+    const query = c.req.query("search")?.trim()
 
     const studentNumbers = await db.select({ studentNumber: usersTable.studentNumber })
                                     .from(usersTable)
@@ -32,20 +32,20 @@ app.get("/", async (ctx) => {
                                         undefined
                                     )
                                     .limit(10)
-    return ctx.json({
+    return c.json({
         studentNumbers
     })
 
 })
 
-app.post("/", zValidator('json', StudentNumber), async (ctx) => {
-    const studentNumber = ctx.req.valid("json").studentNumber
+app.post("/", zValidator('json', StudentNumber), async (c) => {
+    const studentNumber = c.req.valid("json").studentNumber
     
     const [user] = await db.select()
                         .from(usersTable)
                         .where(eq(usersTable.studentNumber, studentNumber))
     if(!user){
-        return ctx.json({
+        return c.json({
             message: `Student number '${studentNumber}' might not be a College Man.`
         }, 404)
     }
@@ -68,25 +68,29 @@ app.post("/", zValidator('json', StudentNumber), async (ctx) => {
             .set({ verificationToken })
             .where(eq(usersTable.studentNumber, studentNumber))
 
+    sendEmail({
+        studentNumber: user.studentNumber,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email,
+        resetPasswordToken: user.resetPasswordToken || "",
+        verificationToken
+    })
     
-    // TODO: swap this out for a call to send an email
-    console.log("email: " + email, "\nverification token: " + verificationToken)
-
-
-    return ctx.json({
+    return c.json({
         message: "Student number confirmed. A verification email has been sent to the relevant student email."
     })
 })
 
-app.post("/verification", zValidator("json", VerificationSchema), async (ctx) => {
-    const vToken = ctx.req.valid("json").verificationToken
+app.post("/verification", zValidator("json", VerificationSchema), async (c) => {
+    const vToken = c.req.valid("json").verificationToken
 
     const [user] = await db.select()
                         .from(usersTable)
                         .where(eq(usersTable.verificationToken, vToken))
     
     if(!user){
-        return ctx.json({
+        return c.json({
             message: "Provided token was not issued or is no longer valid."
         }, 404)
     }
@@ -100,21 +104,21 @@ app.post("/verification", zValidator("json", VerificationSchema), async (ctx) =>
             .where(eq(usersTable.studentNumber, user.studentNumber))
 
     // give an onboarding token or sumn
-    return ctx.json({
+    return c.json({
         onboardingToken
     })
 })
 
-app.post("/register", zValidator("json", RegisterSchema), async (ctx) => {
-    const userData = ctx.req.valid("json")
-    const onboardingToken = ctx.req.header("X-Onboarding-Token")
+app.post("/register", zValidator("json", RegisterSchema), async (c) => {
+    const userData = c.req.valid("json")
+    const onboardingToken = c.req.header("X-Onboarding-Token")
 
     if(!onboardingToken){
-        return ctx.json({ message: "Missing onboarding token " }, 401)
+        return c.json({ message: "Missing onboarding token " }, 401)
     }
 
     if(!userData){
-        return ctx.json({
+        return c.json({
             message: "Expected a body for this requested."
         }, 400)
     }
@@ -145,20 +149,51 @@ app.post("/register", zValidator("json", RegisterSchema), async (ctx) => {
     payload.exp = now + REFRESH_TOKEN_TTL
     const refresh = await sign(payload, env.JWT_SECRET)
 
-    setCookie(ctx, "refreshToken", refresh, {
+    setCookie(c, "refreshToken", refresh, {
         sameSite: "strict",
         httpOnly: true,
         secure: true
     })
 
-    return ctx.json({ accessToken: access })
+    return c.json({ accessToken: access })
 })
 
-app.post("/login", zValidator("json", LoginSchema), async (ctx) => {
-    
+app.post("/login", zValidator("json", LoginSchema), async (c) => {
+    const userData = c.req.valid("json")
+    if(!userData){
+        return c.json({
+            message: "Expected a body for this requested."
+        }, 400)
+    }
+
+    const [user] = await db.select()
+                        .from(usersTable)
+                        .where(eq(usersTable.studentNumber, userData.studentNumber))
+    if(!user || (user && !compareSync(userData.password, user.password))){
+        return c.json({ message: "Invalid credentials" }, 400)
+    }
+
+    const now = Date.now();
+    const payload = {
+        sub: user.studentNumber,
+        role: user.role,
+        exp: now + ACCESS_TOKEN_TTL
+    }
+    const access = await sign(payload, env.JWT_SECRET)
+
+    payload.exp = now + REFRESH_TOKEN_TTL
+    const refresh = await sign(payload, env.JWT_SECRET)
+
+    setCookie(c, "refreshToken", refresh, {
+        sameSite: "strict",
+        httpOnly: true,
+        secure: true
+    })
+
+    return c.json({ accessToken: access })
 })
 
-app.post("/refresh", async (ctx) => {
+app.post("/refresh", async (c) => {
 
 })
 

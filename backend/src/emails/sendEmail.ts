@@ -18,7 +18,7 @@ export default function sendEmail(
 ){
     const { html, text } = verification ? verificationEmailTemplate(user) : forgotPasswordEmailTemplate(user)
     resend.emails.send({
-        from: "" /* Gotta actually have this jawn */,
+        from: env.APP_EMAIL /* Gotta actually have this jawn */,
         to: user.email,
         subject: verification ? "Identity Verification" : "Password Reset",
         html,
