@@ -1,7 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(() => {
+    async function testRequest(){
+      const res = await fetch("http://localhost:8000/api/auth/", {
+        credentials: 'include'
+      })
+      
+      if(!res.ok){
+        return;
+      }
+
+      const resData = await res.json()
+      console.log(resData)
+    } 
+    testRequest()
+
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">

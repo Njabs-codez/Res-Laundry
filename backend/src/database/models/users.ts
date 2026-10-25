@@ -17,6 +17,7 @@ export const usersTable = pgTable('users', {
     roomNumber: varchar('room_number', { length: 7 }).notNull().default("not assigned"),
     cellNumber: varchar('cellphone_number', { length: 10 }).notNull().default("not assigned"),
     refreshToken: varchar('refresh_token', { length: 255 }),
-    resetPasswordToken: varchar('reset_password_token', { length: 255 }),
-    verificationToken: varchar('verification_token', { length: 255 }),
+    resetPasswordToken: varchar('reset_password_token'),
+    verificationToken: varchar('verification_token'),
+    onboardingToken: varchar('onboarding_token')
 })
