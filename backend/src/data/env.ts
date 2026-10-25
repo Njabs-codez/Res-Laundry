@@ -11,7 +11,8 @@ const envSchema = z.object({
     PG_PASSWORD: z.string().min(1),
     DATABASE_URL: z.string().min(1),
     JWT_SECRET: z.string().min(1),
-    
+    RESEND_API_KEY: z.string().min(1),
+    APPLICATION_URL: z.string().min(1).default("http://localhost:3000")
 })
 
 const parsed = envSchema.safeParse(process.env)
