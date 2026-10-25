@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "db:seed": "tsx --env-file=../.env src/database/seed.ts",
-    "dev": "yarn db:seed && tsx watch --env-file=../.env src/index.ts",
+    "dev": "tsx watch --env-file=../.env src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "db:migrate": "npx drizzle-kit generate && npx drizzle-kit generate"

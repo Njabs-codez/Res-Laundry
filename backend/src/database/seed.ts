@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync } from "node:crypto";
+import { genSaltSync, hashSync } from "bcrypt-ts"
 import { usersTable } from "./models/users.ts";
 import { machinesTable } from "./models/machines.ts";
 import db from "./db.ts"
@@ -9,8 +9,8 @@ const TEST_PASSWORD = "Password123!";
 // SWAP THIS for whatever your auth code uses (bcrypt/argon2), otherwise
 // logging in as seeded users will fail.
 function hashPassword(plain: string): string {
-  const salt = randomBytes(16).toString("hex");
-  return `${salt}:${scryptSync(plain, salt, 64).toString("hex")}`;
+  const salt = genSaltSync(12);
+  return hashSync(plain, salt);
 }
 
 // student_number format: "u" + 8 digits (9 chars total, fits varchar(9)).

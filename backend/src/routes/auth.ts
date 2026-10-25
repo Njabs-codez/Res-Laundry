@@ -105,6 +105,7 @@ app.post("/verification", zValidator("json", VerificationSchema), async (c) => {
 
     // give an onboarding token or sumn
     return c.json({
+        studentNumber: user.studentNumber,
         onboardingToken
     })
 })
@@ -169,6 +170,7 @@ app.post("/login", zValidator("json", LoginSchema), async (c) => {
     const [user] = await db.select()
                         .from(usersTable)
                         .where(eq(usersTable.studentNumber, userData.studentNumber))
+    
     if(!user || (user && !compareSync(userData.password, user.password))){
         return c.json({ message: "Invalid credentials" }, 400)
     }
@@ -194,6 +196,14 @@ app.post("/login", zValidator("json", LoginSchema), async (c) => {
 })
 
 app.post("/refresh", async (c) => {
+    const refToken = getCookie(c, "refreshToken")
+    console.log("refreshToken from cookies", refToken)
+    
+
+    return c.json({ accessToken: "sumn slight" })
+})
+
+app.post("/reset-password", async (c) => {
 
 })
 

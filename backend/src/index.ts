@@ -17,7 +17,7 @@ app.use("/api/*", logger())
 
 app.route("/api/auth", authRoutes)
 
-app.get('/api/', (c) => {
+app.get('/api', (c) => {
   return c.text('Hello Hono!')
 })
 
